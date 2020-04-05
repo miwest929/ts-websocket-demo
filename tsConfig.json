@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "outDir": "src/js",
+      "target": "es6"
+    },
+    "include": ["main.ts", "src/app/**/*"]
+  }

@@ -1,0 +1,15 @@
+{
+  "name": "WebsocketDemo",
+  "version": "0.1.0",
+  "description": "A quick demo of Websocket",
+  "author": "Michael West",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^8.9.4",
+    "typescript": "^3.3.3333",
+    "ws": "^7.2.3"
+  },
+  "devDependencies": {
+    "typescript": "^3.3.3333"
+  }
+}
