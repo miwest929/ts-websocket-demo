@@ -87,8 +87,6 @@
               $('#average').text(average.toFixed(2));
             }
 
-            updateNumbersStats();
-
             function WebSocketTest() {
                if ("WebSocket" in window) {
                   console.log("WebSocket is supported by your Browser!");
@@ -118,6 +116,10 @@
                   console.log("WebSocket NOT supported by your Browser!");
                }
             }
+
+            $( document ).ready(() => {
+                updateNumbersStats();
+            });
          </script>
         <div id = "sse">
             <a href = "javascript:WebSocketTest()">Run WebSocket</a>
