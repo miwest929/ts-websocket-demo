@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <style>
+            html * {
+                font-family: monaco;
+            }
+
+            .stat-label {
+                font-weight: 700;
+            }
+
+            .stat-display {
+                display: inline;
+            }
+
+            .container {
+                margin-top: 15px;
+            }
+
+            .number-cell {
+                border: 1px solid black;
+                padding: 5px;
+            }
+
+            .first-row-cell {
+
+            }
+
+            .left-number-cell {
+
+            }
+
+            .container-row {
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="                                                                                                                 
+            crossorigin="anonymous">
+        </script>
+        <script type = "text/javascript">
+            let numbers = [];
+            let count = 0;
+            let sum = 0;
+            let currentRowLength = 0;
+            const MAX_CELLS_PER_ROW = 30;
+
+            function updateNumbersContainer(nextNumber) {
+                const numbersContainer = $('#numbers');
+                const numbersContainerRows = $('#numbers > div');
+                const lastNumbersRow = numbersContainerRows[numbersContainerRows.length - 1];
+                const newCell = $('<span></span>');
+                newCell.addClass('number-cell');
+                const cellText = nextNumber < 10 ? `${nextNumber} ` : nextNumber;
+                newCell.text(cellText);
+
+                if (currentRowLength > MAX_CELLS_PER_ROW) {
+                    const newRow = $('<div></div');
+                    newRow.addClass('container-row');
+                    newRow.append(newCell[0]);
+                    numbersContainer.append(newRow);
+                    currentRowLength = 1;
+                } else {
+                    lastNumbersRow.append(newCell[0]);
+                    currentRowLength++;
+                }
+            }
+
+            function updateNumbersDisplay(nextNumber) {
+              updateNumbersContainer(nextNumber);
+
+              count++;
+              sum += nextNumber;
+
+              updateNumbersStats();
+            }
+
+            function updateNumbersStats() {
+              let average = count === 0 ? 0 : sum / count;
+              $('#count').text(count);
+              $('#sum').text(sum);
+              $('#average').text(average.toFixed(2));
+            }
+
+            updateNumbersStats();
+
+            function WebSocketTest() {
+               if ("WebSocket" in window) {
+                  console.log("WebSocket is supported by your Browser!");
+                  
+                  // Let us open a web socket
+                  var ws = new WebSocket("ws://localhost:9998");
+                   
+                  ws.onopen = function() {
+                     // Web Socket is connected, send data using send()
+                     ws.send("Message to send");
+                     console.log("Message is sent...");
+                  };
+                   
+                  ws.onmessage = function (evt) { 
+                     var received_msg = evt.data;
+                     console.log(`Received: ${received_msg}`);
+                     numbers.push(received_msg);
+                     updateNumbersDisplay(parseInt(received_msg, 10));
+                  };
+                   
+                  ws.onclose = function() { 
+                     // websocket is closed.
+                     console.log("Connection is closed..."); 
+                  };
+               } else {
+                  // The browser doesn't support WebSocket
+                  console.log("WebSocket NOT supported by your Browser!");
+               }
+            }
+         </script>
+        <div id = "sse">
+            <a href = "javascript:WebSocketTest()">Run WebSocket</a>
+            <div>
+                <div>
+                    <div><span class='stat-label'>count = </span><p id='count' class='stat-display'></p></div>
+                    <div><span>sum = </span><p id='sum' class='stat-display'></p></div>
+                    <div><span>mean = </span><p id='average' class='stat-display'></p></div>
+                </div>
+                <div class='container' id='numbers'><div class='container-row'></div></div>
+            </div>
+         </div> 
+    </body>
+</html>
